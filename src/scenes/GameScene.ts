@@ -27,6 +27,7 @@ export class GameScene extends Phaser.Scene {
   private expBarBg!: Phaser.GameObjects.Graphics;
   private hpBarFill!: Phaser.GameObjects.Graphics;
   private expBarFill!: Phaser.GameObjects.Graphics;
+  private hpLabelText!: Phaser.GameObjects.Text;
   private infoText!: Phaser.GameObjects.Text;
   private enemyCountText!: Phaser.GameObjects.Text;
   private levelText!: Phaser.GameObjects.Text;
@@ -111,6 +112,13 @@ export class GameScene extends Phaser.Scene {
     this.expBarFill = this.add.graphics();
     this.bossHPBarBg = this.add.graphics();
     this.bossHPBarFill = this.add.graphics();
+
+    // HP 文字标签（血条左侧）
+    this.hpLabelText = this.add
+      .text(GAME_WIDTH - 300, 14, "", {
+        fontSize: "12px", color: "#ffffff",
+        fontFamily: "PingFang SC, Microsoft YaHei, sans-serif",
+      });
 
     // 关卡横幅文字
     this.levelBannerText = this.add
@@ -555,24 +563,39 @@ export class GameScene extends Phaser.Scene {
     const barW = 160;
     const barH = 14;
 
+    // HP 比例（先计算，供颜色判断和绘制共用）
+    const hpRatio = Phaser.Math.Clamp(this.player.hp / this.player.maxHp, 0, 1);
+
+    // HP 文字标签
+    this.hpLabelText.setText(`生命值：${this.player.hp}`);
+
+    // HP 颜色：>=70% 绿色, 30-70% 黄色, <30% 红色
+    let hpColor: number;
+    if (hpRatio >= 0.7) {
+      hpColor = 0x27ae60; // 绿色
+    } else if (hpRatio >= 0.3) {
+      hpColor = 0xf39c12; // 黄色
+    } else {
+      hpColor = 0xe74c3c; // 红色
+    }
+
     // HP 条
     this.hpBarBg.clear();
     this.hpBarBg.fillStyle(0x333333);
     this.hpBarBg.fillRect(barX, 14, barW, barH);
 
     this.hpBarFill.clear();
-    const hpRatio = Phaser.Math.Clamp(this.player.hp / this.player.maxHp, 0, 1);
-    this.hpBarFill.fillStyle(0xe74c3c);
+    this.hpBarFill.fillStyle(hpColor);
     this.hpBarFill.fillRect(barX, 14, barW * hpRatio, barH);
 
-    // EXP 条
+    // EXP 条（蓝色）
     this.expBarBg.clear();
     this.expBarBg.fillStyle(0x333333);
     this.expBarBg.fillRect(barX, 34, barW, barH);
 
     this.expBarFill.clear();
     const expRatio = Phaser.Math.Clamp(this.player.exp / this.player.expToNext, 0, 1);
-    this.expBarFill.fillStyle(0xf1c40f);
+    this.expBarFill.fillStyle(0x2980b9);
     this.expBarFill.fillRect(barX, 34, barW * expRatio, barH);
 
     // 敌人数量 + 关卡信息
