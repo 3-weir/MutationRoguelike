@@ -29,7 +29,7 @@ export interface EvolutionOption {
 }
 
 export const ALL_EVOLUTIONS: EvolutionOption[] = [
-  // ===== 食物 =====
+  // ===== 食物 (Food) =====
   {
     id: "spicy_pot",
     name: "辣味火锅",
@@ -54,8 +54,40 @@ export const ALL_EVOLUTIONS: EvolutionOption[] = [
     debuff: { sizeMultiplier: 0.15 },
     visualParts: ["big_eyes"],
   },
+  {
+    id: "spoiled_milk",
+    name: "变质牛奶",
+    type: "food",
+    buff: { damage: 8 },
+    debuff: { speed: 0.9 },
+    visualParts: ["green_gas", "glowing_belly"],
+  },
+  {
+    id: "mushroom",
+    name: "神秘蘑菇",
+    type: "food",
+    buff: { critChance: 0.08, damage: 3 },
+    debuff: { stunInterval: 15 },
+    visualParts: ["mushroom_cap"],
+  },
+  {
+    id: "energy_cookie",
+    name: "能量饼干",
+    type: "food",
+    buff: { heal: 30 },
+    debuff: { attackCooldown: 1.2 },
+    visualParts: ["cookie_armor"],
+  },
+  {
+    id: "radioactive_apple",
+    name: "辐射苹果",
+    type: "food",
+    buff: { damage: 8, bulletSpeed: 1.15 },
+    debuff: { sizeMultiplier: 0.1 },
+    visualParts: ["radioactive_glow"],
+  },
 
-  // ===== 药物 =====
+  // ===== 药物 (Drug) =====
   {
     id: "muscle",
     name: "肌肉针剂",
@@ -80,8 +112,32 @@ export const ALL_EVOLUTIONS: EvolutionOption[] = [
     debuff: { damage: -5 },
     visualParts: ["green_skin"],
   },
+  {
+    id: "unknown_gene",
+    name: "未知基因药",
+    type: "drug",
+    buff: { damage: 5, dodgeChance: 0.05 },
+    debuff: { autoFire: true },
+    visualParts: ["mutated_organ", "random_glow"],
+  },
+  {
+    id: "ice_serum",
+    name: "冰冻血清",
+    type: "drug",
+    buff: { dodgeChance: 0.1, speed: 1.1 },
+    debuff: { damage: -4 },
+    visualParts: ["ice_crystal"],
+  },
+  {
+    id: "adrenaline",
+    name: "肾上腺素",
+    type: "drug",
+    buff: { attackCooldown: 0.7, speed: 1.15 },
+    debuff: { stunInterval: 8 },
+    visualParts: ["lightning_veins"],
+  },
 
-  // ===== 实验物 =====
+  // ===== 实验物 (Experiment) =====
   {
     id: "blackhole",
     name: "迷你黑洞糖",
@@ -105,6 +161,22 @@ export const ALL_EVOLUTIONS: EvolutionOption[] = [
     buff: {},
     debuff: {},
     visualParts: ["random_glow"],
+  },
+  {
+    id: "dream_capsule",
+    name: "AI梦境胶囊",
+    type: "experiment",
+    buff: { critChance: 0.05, bulletSpeed: 1.1 },
+    debuff: { bulletVanish: 0.1 },
+    visualParts: ["dream_aura", "third_eye"],
+  },
+  {
+    id: "quantum_cloak",
+    name: "量子隐身剂",
+    type: "experiment",
+    buff: { bulletSpeed: 1.3, dodgeChance: 0.05 },
+    debuff: { bulletVanish: 0.2 },
+    visualParts: ["transparent_body"],
   },
 ];
 

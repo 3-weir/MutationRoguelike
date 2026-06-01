@@ -297,6 +297,12 @@
       border: 1px solid rgba(255,255,255,0.15);
     }
     .pause-panel .btn-save-quit:hover { background: rgba(255,255,255,0.14); }
+    .pause-panel .btn-view-evos {
+      color: #7dd3fc;
+      background: rgba(125,211,252,0.08);
+      border: 1px solid rgba(125,211,252,0.2);
+    }
+    .pause-panel .btn-view-evos:hover { background: rgba(125,211,252,0.15); }
 
     /* ====== 游戏容器 ====== */
     #game-screen {
@@ -558,6 +564,7 @@
       <div class="pause-panel">
         <h2>⏸️ 实验暂停</h2>
         <button class="btn-resume" id="btn-resume">▶ 继续实验</button>
+        <button class="btn-view-evos" id="btn-view-evos">📦 查看药物汇总</button>
         <button class="btn-save-quit" id="btn-save-quit">💾 保存并退出</button>
       </div>
     </div>
@@ -579,6 +586,18 @@
             <button class="btn-confirm-yes" id="btn-evo-confirm-yes" style="background: linear-gradient(135deg, #38bdf8, #818cf8);">确认变异</button>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 药物汇总弹窗 -->
+  <div id="evos-summary-overlay" class="confirm-overlay" style="display:none; z-index:25;">
+    <div class="confirm-dialog" style="border-color: rgba(125,211,252,0.3); max-width: 480px; width: 90vw;">
+      <div class="confirm-icon">📦</div>
+      <div class="confirm-title">已获得药物汇总</div>
+      <div class="confirm-msg" id="evos-summary-content" style="text-align: left; max-height: 320px; overflow-y: auto; line-height: 1.8;"></div>
+      <div class="confirm-buttons">
+        <button class="btn-confirm-no" id="btn-evos-summary-close" style="flex:1;">关闭</button>
       </div>
     </div>
   </div>

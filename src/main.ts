@@ -54,6 +54,86 @@ const createError = document.getElementById("create-error")!;
 // 结算页
 const btnRestart = document.getElementById("btn-restart")!;
 
+// 药物汇总弹窗
+const evosSummaryOverlay = document.getElementById("evos-summary-overlay")!;
+const evosSummaryContent = document.getElementById("evos-summary-content")!;
+const btnEvosSummaryClose = document.getElementById("btn-evos-summary-close")!;
+
+/** 显示药物汇总弹窗（从 GameScene 获取玩家进化数据） */
+function showEvosSummary(): void {
+  // 从 GameScene 的 player 实例获取进化记录
+  const gameScene = game?.scene?.scenes?.[0] as any;
+  if (!gameScene || !gameScene.player) {
+    evosSummaryContent.innerHTML = `<p style="color:#64748b;">暂无药物数据，请先开始游戏。</p>`;
+  } else {
+    const evolutionLog = gameScene.player.evolutionLog as import("./data/evolutions").EvolutionOption[];
+    const visualParts = gameScene.player.visualParts as string[];
+    const typeIcon: Record<string, string> = { food: "🍖", drug: "💊", experiment: "🧪" };
+    const typeLabel: Record<string, string> = { food: "食物", drug: "药物", experiment: "实验物" };
+
+    let html = "";
+    if (evolutionLog.length === 0) {
+      html = `<p style="color:#64748b;">尚未获得任何药物或进化。</p>`;
+    } else {
+      html += `<p style="color:#94a3b8; margin-bottom:10px;">已获得 <span style="color:#e2e8f0; font-weight:600;">${evolutionLog.length}</span> 种进化：</p>`;
+      for (let i = 0; i < evolutionLog.length; i++) {
+        const ev = evolutionLog[i];
+        const icon = typeIcon[ev.type] ?? "❓";
+        const label = typeLabel[ev.type] ?? ev.type;
+        const buffDesc = EvolutionSystem.describeBuff(ev.buff);
+        const debuffDesc = EvolutionSystem.describeDebuff(ev.debuff);
+        html += `
+          <div style="margin-bottom:10px; padding:8px 12px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid rgba(255,255,255,0.06);">
+            <div style="color:#e2e8f0; font-weight:600;">${icon} ${ev.name} <span style="font-size:11px; color:#64748b;">（${label}）</span></div>
+            <div style="font-size:12px; color:#4ade80; margin-top:2px;">增益：${buffDesc || "无"}</div>
+            <div style="font-size:12px; color:#f87171;">副作用：${debuffDesc || "无"}</div>
+          </div>`;
+      }
+      if (visualParts.length > 0) {
+        html += `<p style="color:#94a3b8; margin-top:12px; margin-bottom:6px;">已获得外观部件：</p>`;
+        html += `<div style="color:#7dd3fc; font-size:13px;">${visualParts.join("  ")}</div>`;
+      }
+    }
+    evosSummaryContent.innerHTML = html;
+  }
+
+  evosSummaryOverlay.style.display = "flex";
+}
+
+function hideEvosSummary(): void {
+  evosSummaryOverlay.style.display = "none";
+}
+
+btnEvosSummaryClose.addEventListener("click", hideEvosSummary);
+evosSummaryOverlay.addEventListener("click", (e) => {
+  if (e.target === evosSummaryOverlay) hideEvosSummary();
+});
+
+// 暂停页「查看药物汇总」按钮
+const btnViewEvos = document.getElementById("btn-view-evos")!;
+btnViewEvos.addEventListener("click", () => {
+  // 先关闭暂停面板
+  document.getElementById("pause-screen")?.classList.remove("show");
+  showEvosSummary();
+  // 标记：关闭汇总后重新显示暂停面板
+  (evosSummaryOverlay as any)._returnToPause = true;
+});
+
+// 关闭汇总后，如果来自暂停面板，则重新显示暂停面板
+evosSummaryOverlay.addEventListener("click", (e) => {
+  if (e.target === evosSummaryOverlay && (evosSummaryOverlay as any)._returnToPause) {
+    (evosSummaryOverlay as any)._returnToPause = false;
+    document.getElementById("pause-screen")?.classList.add("show");
+  }
+});
+(btnEvosSummaryClose as HTMLButtonElement).addEventListener("click", () => {
+  evosSummaryOverlay.style.display = "none";
+  if ((evosSummaryOverlay as any)._returnToPause) {
+    (evosSummaryOverlay as any)._returnToPause = false;
+    document.getElementById("pause-screen")?.classList.add("show");
+  }
+});
+
 // ----------------------------------------------------------------
 // 状态: "login" | "register"
 // ----------------------------------------------------------------
